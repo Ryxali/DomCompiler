@@ -240,7 +240,7 @@ namespace DomCompiler
                             var read = reader.ReadLine();
                             var pure = sansComments.Match(read);
                             quotes += Regex.Matches(pure.Success ? pure.Value : read, @"""").Count;
-                            if (parserBuffer.Length == 0)
+                            if (parserBuffer.Length == 0 && quotes % 2 == 0)
                                 parserBuffer.Append(read);
                             else
                                 parserBuffer.AppendLine(read);
