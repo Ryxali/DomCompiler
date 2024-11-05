@@ -18,7 +18,7 @@ namespace DomCompiler
         private readonly Regex sansComments = new Regex(@"^#\w.+\S(?=\s*--)");
         private readonly Regex endMatch = new Regex(@"^#end");
         private readonly Regex idMatch = new Regex(@"(?<=#\w\S*\s)\S+");
-        private readonly Regex imageMatch = new Regex(@"(?<=#((spr\d?)|(icon)|(flag))\s*"")[^""]+(?="")");
+        private readonly Regex imageMatch = new Regex(@"(?<=#((x?spr\d?)|(icon)|(flag))\s*"")[^""]+(?="")");
         private readonly Regex idReplaceMatch = new Regex(@"(#\w\S*\s)($\d+)(.*)");
 
         private readonly Regex isNewSelectCopyMatch = new Regex(@"(?<=#((new)|(select)|(copy))\S+\s+)\$\S+");
