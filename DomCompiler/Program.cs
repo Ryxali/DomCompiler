@@ -42,7 +42,7 @@ namespace DomCompiler
             modset.BindIds();
             modset.Sort();
 
-            using (var stream = new StreamWriter(File.OpenWrite(programArgs.outputPath)))
+            using (var stream = new StreamWriter(File.OpenWrite(programArgs.outputPath), System.Text.Encoding.UTF8))
             {
                 modset.Write(stream);
             }
