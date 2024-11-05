@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DomCompiler": {
+      "commandName": "Project",
+      "commandLineArgs": "\"%appdata%\\Dominions6\\mods\\Dun\\Dun.dm\" \"\\..\\..\\Testcase\""
+    }
+  }
+}
