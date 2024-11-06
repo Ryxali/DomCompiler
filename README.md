@@ -11,12 +11,19 @@ DomCompiler arg0 [arg1] [--windex | --start-weapon-index] [--aindex | --start-ar
 Parses all .dme files in the working directory and outputs them to a single .dm file, copying all used art assets in the process.
 
 **arg0**: path to the output file, as an absolute path or relative to arg1.
+
 **arg1** (optional): path to working directory. Will use the default working directory if unspecified.
+
 **--windex | --start-weapon-index** (optional): start index to use for relative ids for weapons (1000-3999).
+
 **--aindex | --start-armor-index** (optional): start index to use for relative ids for armors (300-999).
+
 **--mindex | --start-monster-index** (optional): start index to use for relative ids for monsters (5000-8999).
+
 **--sindex | --start-spell-index** (optional): start index to use for relative ids for spells (1300-3999).
+
 **--nindex | --start-nation-index** (optional): start index to use for relative ids for spells (159-499).
+
 **--eindex | --start-eventcode-index** (optional): start index to use for relative ids for spells (-300--5000).
 
 Indices default to their minimum absolute value, so 1000 for weapons, -300 for event codes, etc. Setting an id close to it's maximum value is not recommended, as ids can then overflow outside the recommended range.
