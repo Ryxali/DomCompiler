@@ -12,8 +12,8 @@ namespace DomCompiler
                 xId = int.MinValue + xId;
             if (y.raw[0].StartsWith("#new"))
                 yId = int.MinValue + yId;
-            
-            return xId - yId;
+
+            return  xId.CompareTo(yId);
         }
     }
 }
