@@ -7,7 +7,9 @@ When compiling, it will automatically detect all art references made in the mod 
 
 ## Usage
 DomCompiler arg0 [arg1] [--windex | --start-weapon-index] [--aindex | --start-armor-index] [--mindex | --start-monster-index] [--sindex | --start-spell-index] [--nindex | --start-nation-index] [--eindex | --start-eventcode-index]
+
 Parses all .dme files in the working directory and outputs them to a single .dm file, copying all used art assets in the process.
+
 **arg0**: path to the output file, as an absolute path or relative to arg1.
 **arg1** (optional): path to working directory. Will use the default working directory if unspecified.
 **--windex | --start-weapon-index** (optional): start index to use for relative ids for weapons (1000-3999).
