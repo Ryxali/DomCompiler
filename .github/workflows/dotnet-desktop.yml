@@ -51,13 +51,15 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
-        runtime: [linux-x64, win-x64, osx-x64]
+        runtime: [linux-x64, win-x64, osx-x64, Portable]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
       Solution_Name: DomCompiler.sln                            # Replace with your solution name, i.e. MyWpfApp.sln.
+      Wap_Project_Directory: DomCompiler    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
+      Wap_Project_Path: DomCompiler\DomCompiler.csproj                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
 
     steps:
     - name: Checkout
@@ -96,4 +98,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: DomCompiler\DomCompiler\obj\${{ matrix.configuration }}\netcoreapp3.1\AppPackages
+        path: ${{ env.Wap_Project_Directory }}\AppPackages
