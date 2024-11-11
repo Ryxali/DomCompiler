@@ -97,4 +97,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{{ $env:configuration }}\netcoreapp3.1\
+        path: D:\a\DomCompiler\DomCompiler\DomCompiler\obj\$env:configuration\netcoreapp3.1\
