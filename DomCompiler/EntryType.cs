@@ -17,6 +17,7 @@
         Poptype,
         Mercenary,
         Event,
-        Ai
+        Ai,
+        EnchantmentNumber
     }
 }

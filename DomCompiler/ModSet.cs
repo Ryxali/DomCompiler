@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace DomCompiler
 {
-    public class ModSet
+    public sealed class ModSet
     {
         private readonly Dictionary<EntryType, List<Entry>> data = new Dictionary<EntryType, List<Entry>>();
         private readonly HashSet<string> imagePaths = new HashSet<string>();
@@ -17,17 +17,27 @@ namespace DomCompiler
         private readonly Regex commandMatch = new Regex(@"#\S+");
         private readonly Regex sansComments = new Regex(@"^#\w.+\S(?=\s*--)");
         private readonly Regex endMatch = new Regex(@"^#end");
-        private readonly Regex idMatch = new Regex(@"(?<=#\w\S*\s)\S+");
+        private readonly Regex idMatch = new Regex(@"(?<=##?\w\S*\s)\$?-?\d+");
         private readonly Regex imageMatch = new Regex(@"(?<=#((x?spr\d?)|(icon)|(flag))\s*"")[^""]+(?="")");
         private readonly Regex idReplaceMatch = new Regex(@"(#\w\S*\s)($\d+)(.*)");
 
-        private readonly Regex isNewSelectCopyMatch = new Regex(@"(?<=#((new)|(select)|(copy))\S+\s+)\$\S+");
-        private readonly Regex weaponIdMatch = new Regex(@"(?<=#((secondaryeffect\S*)|(danceweapon)|(weapon))\s+)\$\S+");
-        private readonly Regex armorIdMatch = new Regex(@"(?<=#armor\s+)\$\S+");
-        private readonly Regex monsterIdMatch = new Regex(@"(?<=#((monpresentrec)|(damage)|(ownsmonrec)|(\S*shape\S*)|(twiceborn)|(lich)|(animated)|(\S*sum\S*)|(templetrainer)|(slaver)|(assassin)|(\S*mnr\S*)|(\S*mon\S*)|(\S*com\S*)|(\S*unit\S*)|(\S*rec\S*)|(\S*scout\S*)|(\S*hero\S*)|(\S*god\S*)|(guardspirit))\s+)\$\S+");
-        private readonly Regex spellIdMatch = new Regex(@"(?<=#(\S*spell\S*)\s+)\$\S+");
-        private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(newtemplate))\s+)\$\S+");
-        private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\S+");
+        private readonly Regex isNewSelectCopyMatch = new Regex(@"(?<=#((new)|(select)|(copy))\S+\s+)\$\d+");
+        private readonly Regex weaponIdMatch = new Regex(@"(?<=#((secondaryeffect\S*)|(danceweapon)|(weapon))\s+)\$\d+");
+        private readonly Regex armorIdMatch = new Regex(@"(?<=#armor\s+)\$\d+");
+        private readonly Regex monsterIdMatch = new Regex(@"(?<=#((monpresentrec)|(damage)|(ownsmonrec)|(\S*shape\S*)|(twiceborn)|(lich)|(animated)|(\S*sum\S*)|(templetrainer)|(slaver)|(assassin)|(\S*mnr\S*)|(\S*mon\S*)|(\S*com\S*)|(\S*unit\S*)|(\S*rec\S*)|(\S*scout\S*)|(\S*hero\S*)|(\S*god\S*)|(guardspirit))\s+)\$\d+");
+        private readonly Regex siteIdMatch = new Regex(@"(?<=#(\S*site\S*)\s+)\$\d+");
+        private readonly Regex spellIdMatch = new Regex(@"(?<=#(\S*spell\S*)\s+)\$\d+");
+        private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(newtemplate))\s+)\$\d+");
+        private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
+        private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
+
+        #region Special Commands
+        private static readonly Regex globalEnchantment = new Regex(@"(?<=##globalenchantment\s+)\$?-?\d+");
+        private static readonly Regex combatSummon = new Regex(@"(?<=##combatsummon\s+)\$?-?\d+");
+        private static readonly Regex ritualSummon = new Regex(@"(?<=##ritualsummon\s+)\$?-?\d+");
+        private static readonly Regex ritualCommanderSummon = new Regex(@"(?<=##ritualsummoncom\s+)\$?-?\d+");
+
+        #endregion
 
         private readonly StringBuilder parserBuffer = new StringBuilder();
 
@@ -77,11 +87,13 @@ namespace DomCompiler
             {
                 var r = entry.raw[i];
                 entry.raw[i] = isNewSelectCopyMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, entry.type).ToString());
+                entry.raw[i] = enchantmentNumberMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.EnchantmentNumber).ToString());
                 entry.raw[i] = weaponIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Weapon).ToString());
                 entry.raw[i] = armorIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Armor).ToString());
                 entry.raw[i] = monsterIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Monster).ToString());
                 entry.raw[i] = spellIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Spell).ToString());
                 entry.raw[i] = nationIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Nation).ToString());
+                entry.raw[i] = siteIdMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Site).ToString());
                 entry.raw[i] = codeMatch.Replace(entry.raw[i], ev => ParseId(ev.Value, EntryType.Event).ToString());
                 // Console.WriteLine($"{r} => {entry.raw[i]}");
             }
@@ -95,6 +107,7 @@ namespace DomCompiler
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
+
                     if (entryMatch.IsMatch(line))
                     {
                         var entry = ParseEntry(line, reader);
@@ -103,6 +116,49 @@ namespace DomCompiler
                 }
             }
         }
+
+        public bool ParseSpecial(string line, StringBuilder output)
+        {
+            var isGlobalEnch = globalEnchantment.Match(line);
+            if (isGlobalEnch.Success)
+            {
+                var id = ParseId(idMatch.Match(line).Value, EntryType.EnchantmentNumber);
+                output.AppendLine("#effect 10081");
+                output.Append("#damage ");
+                output.Append(id.ToString());
+                return true;
+            }
+            var isCombatSumm = combatSummon.Match(line);
+            if (isCombatSumm.Success)
+            {
+                var id = ParseId(idMatch.Match(line).Value, EntryType.Monster);
+                output.AppendLine("#effect 1");
+                output.Append("#damage ");
+                output.Append(id.ToString());
+                return true;
+            }
+            var isRitualSumm = ritualSummon.Match(line);
+            if (isRitualSumm.Success)
+            {
+                var id = ParseId(idMatch.Match(line).Value, EntryType.Monster);
+                output.AppendLine("#effect 10001");
+                output.Append("#damage ");
+                output.Append(id.ToString());
+                return true;
+            }
+
+            var isRitualSummCom = ritualCommanderSummon.Match(line);
+            if (isRitualSummCom.Success)
+            {
+                var id = ParseId(idMatch.Match(line).Value, EntryType.Monster);
+                output.AppendLine("#effect 10021");
+                output.Append("#damage ");
+                output.Append(id.ToString());
+                return true;
+            }
+            return false;
+        }
+
 
         public IEnumerable<string> GetImagePaths() => imagePaths;
 
@@ -141,6 +197,8 @@ namespace DomCompiler
                     EntryType.Spell => idV + startIndices.startSpellIndex,
                     EntryType.Nation => idV + startIndices.startNationIndex,
                     EntryType.Event => startIndices.startEventCodeIndex - idV,
+                    EntryType.EnchantmentNumber => idV + startIndices.startEnchNbr,
+                    EntryType.Site => idV + startIndices.startSiteIndex,
                     _ => idV
                 };
             }
@@ -157,6 +215,7 @@ namespace DomCompiler
             var command = commandMatch.Match(entry).Value;
 
             const string Entry = "_";
+            const string EntryWithId = "__";
             EntryType type = default;
             int? id = null;
             switch (command)
@@ -178,59 +237,61 @@ namespace DomCompiler
                 case "#domversion":
                     type = EntryType.Meta;
                     break;
-                case "#selectsound":
-                    type = EntryType.Sound;
-                    goto case Entry;
-                case "#selectweapon":
-                case "#newweapon":
-                    type = EntryType.Weapon;
-                    goto case Entry;
-                case "#selectarmor":
-                case "#newarmor":
-                    type = EntryType.Armor;
-                    goto case Entry;
-                case "#selectmonster":
-                case "#newmonster":
-                    type = EntryType.Monster;
-                    goto case Entry;
-                case "#selectnametype":
-                    type = EntryType.Name;
-                    goto case Entry;
-                case "#selectbless":
-                    type = EntryType.Blessing;
-                    goto case Entry;
-                case "#selectsite":
-                case "#newsite":
-                    type = EntryType.Site;
-                    goto case Entry;
-                case "#selectnation":
-                case "#newnation":
-                    type = EntryType.Nation;
-                    goto case Entry;
-                case "#selectspell":
-                case "#newspell":
-                    type = EntryType.Spell;
-                    goto case Entry;
-                case "#selectitem":
-                case "#newitem":
-                    type = EntryType.Item;
-                    goto case Entry;
-                case "#selectpoptype":
-                    type = EntryType.Poptype;
-                    goto case Entry;
-                case "#newmerc":
-                    type = EntryType.Mercenary;
-                    goto case Entry;
                 case "#newevent":
                     type = EntryType.Event;
                     goto case Entry;
+                case "#selectsound":
+                    type = EntryType.Sound;
+                    goto case EntryWithId;
+                case "#selectweapon":
+                case "#newweapon":
+                    type = EntryType.Weapon;
+                    goto case EntryWithId;
+                case "#selectarmor":
+                case "#newarmor":
+                    type = EntryType.Armor;
+                    goto case EntryWithId;
+                case "#selectmonster":
+                case "#newmonster":
+                    type = EntryType.Monster;
+                    goto case EntryWithId;
+                case "#selectnametype":
+                    type = EntryType.Name;
+                    goto case EntryWithId;
+                case "#selectbless":
+                    type = EntryType.Blessing;
+                    goto case EntryWithId;
+                case "#selectsite":
+                case "#newsite":
+                    type = EntryType.Site;
+                    goto case EntryWithId;
+                case "#selectnation":
+                case "#newnation":
+                    type = EntryType.Nation;
+                    goto case EntryWithId;
+                case "#selectspell":
+                case "#newspell":
+                    type = EntryType.Spell;
+                    goto case EntryWithId;
+                case "#selectitem":
+                case "#newitem":
+                    type = EntryType.Item;
+                    goto case EntryWithId;
+                case "#selectpoptype":
+                    type = EntryType.Poptype;
+                    goto case EntryWithId;
+                case "#newmerc":
+                    type = EntryType.Mercenary;
+                    goto case EntryWithId;
                 case "#newtemplate":
                     type = EntryType.Ai;
-                    goto case Entry;
-                case Entry:
+                    goto case EntryWithId;
+                case EntryWithId:
                     var idStr = idMatch.Match(entry);
                     if(idStr.Success)
                         id = ParseId(idStr.Value, type);
+                    goto case Entry;
+                case Entry:
                     while (!reader.EndOfStream)
                     {
                         parserBuffer.Clear();
@@ -238,12 +299,15 @@ namespace DomCompiler
                         do
                         {
                             var read = reader.ReadLine();
-                            var pure = sansComments.Match(read);
-                            quotes += Regex.Matches(pure.Success ? pure.Value : read, @"""").Count;
-                            if (parserBuffer.Length == 0 && quotes % 2 == 0)
-                                parserBuffer.Append(read);
-                            else
-                                parserBuffer.AppendLine(read);
+                            if (!ParseSpecial(read, parserBuffer))
+                            {
+                                var pure = sansComments.Match(read);
+                                quotes += Regex.Matches(pure.Success ? pure.Value : read, @"""").Count;
+                                if (parserBuffer.Length == 0 && quotes % 2 == 0)
+                                    parserBuffer.Append(read);
+                                else
+                                    parserBuffer.AppendLine(read);
+                            }
                         }
                         while (quotes % 2 == 1);
 

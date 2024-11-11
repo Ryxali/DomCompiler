@@ -20,16 +20,18 @@ namespace DomCompiler
             if (args.Length > 0 && string.Equals(args[0], "--help"))
             {
                 Console.WriteLine("-- Usage --");
-                Console.WriteLine("DomCompiler arg0 [arg1] [--windex | --start-weapon-index] [--aindex | --start-armor-index] [--mindex | --start-monster-index] [--sindex | --start-spell-index] [--nindex | --start-nation-index] [--eindex | --start-eventcode-index]");
+                Console.WriteLine("DomCompiler arg0 [arg1] [--windex | --start-weapon-index] [--aindex | --start-armor-index] [--mindex | --start-monster-index] [--sindex | --start-spell-index] [--nindex | --start-nation-index] [--eindex | --start-eventcode-index] [--enindex | --start-enchnbr-index] [--ecindex | --start-eventcode-index]");
                 Console.WriteLine("Parses all .dme files in the working directory and outputs them to a single .dm file, copying all used art assets in the process.");
                 Console.WriteLine("arg0: path to the output file, as an absolute path or relative to arg1.");
                 Console.WriteLine("arg1 (optional): path to working directory. Will use the default working directory if unspecified.");
                 Console.WriteLine("--windex | --start-weapon-index (optional): start index to use for relative ids for weapons (1000-3999). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
                 Console.WriteLine("--aindex | --start-armor-index (optional): start index to use for relative ids for armors (300-999). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
                 Console.WriteLine("--mindex | --start-monster-index (optional): start index to use for relative ids for monsters (5000-8999). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
-                Console.WriteLine("--sindex | --start-spell-index (optional): start index to use for relative ids for spells (1300-3999). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
+                Console.WriteLine("--spindex | --start-spell-index (optional): start index to use for relative ids for spells (1300-3999). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
                 Console.WriteLine("--nindex | --start-nation-index (optional): start index to use for relative ids for spells (159-499). Defaults to minimum value. Should always be a bit less than the maximum allowed value to not escape bounds when generating.");
-                Console.WriteLine("--eindex | --start-eventcode-index (optional): start index to use for relative ids for spells (-300--5000). Defaults to -300");
+                Console.WriteLine("--siindex | --start-site-index (optional): start index to use for relative ids for sites (1700-3999). Defaults to 1700");
+                Console.WriteLine("--enindex | --start-enchnbr-index (optional): start index to use for relative ids for enchantment numbers (200-9999). Defaults to 200");
+                Console.WriteLine("--ecindex | --start-eventcode-index (optional): start index to use for relative ids for spells (-300--5000). Defaults to -300");
             }
             else if (ProgramArgs.TryParse(args, out var programArgs))
             {

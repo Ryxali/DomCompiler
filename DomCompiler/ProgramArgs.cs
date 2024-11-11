@@ -3,16 +3,6 @@ using System.IO;
 
 namespace DomCompiler
 {
-    public struct StartIndices
-    {
-        public int startWeaponIndex;
-        public int startArmorIndex;
-        public int startMonsterIndex;
-        public int startSpellIndex;
-        public int startNationIndex;
-        public int startEventCodeIndex;
-
-    }
 
     public struct ProgramArgs
     {
@@ -30,7 +20,9 @@ namespace DomCompiler
                 startMonsterIndex = 5000,
                 startSpellIndex = 1300,
                 startNationIndex = 150,
-                startEventCodeIndex = -300
+                startEventCodeIndex = -300,
+                startSiteIndex = 1700,
+                startEnchNbr = 200
             };
 
             workingDirectory = Directory.GetCurrentDirectory();
@@ -104,7 +96,7 @@ namespace DomCompiler
                         }
                         break;
                     case "--start-spell-index":
-                    case "--sindex":
+                    case "--spindex":
                         if (argI + 1 < args.Length && int.TryParse(args[argI + 1], out index) && 1300 <= index && index < 4000)
                         {
                             startIndices.startSpellIndex = index;
@@ -126,7 +118,7 @@ namespace DomCompiler
                         }
                         break;
                     case "--start-eventcode-index":
-                    case "--eindex":
+                    case "--ecindex":
                         if (argI + 1 < args.Length && int.TryParse(args[argI + 1], out index) && -300 >= index && index >= -5000)
                         {
                             startIndices.startEventCodeIndex = index;
@@ -134,6 +126,28 @@ namespace DomCompiler
                         else
                         {
                             throw new ArgumentException($"{arg} must be followed by integer value between -300--5000");
+                        }
+                        break;
+                    case "--start-site-index":
+                    case "--siindex":
+                        if (argI + 1 < args.Length && int.TryParse(args[argI + 1], out index) && 1700 <= index && index < 4000)
+                        {
+                            startIndices.startSiteIndex = index;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"{arg} must be followed by integer value between 1700-3999");
+                        }
+                        break;
+                    case "--start-enchnbr-index":
+                    case "--enindex":
+                        if (argI + 1 < args.Length && int.TryParse(args[argI + 1], out index) && 200 <= index && index < 10000)
+                        {
+                            startIndices.startEnchNbr = index;
+                        }
+                        else
+                        {
+                            throw new ArgumentException($"{arg} must be followed by integer value between 200-9999");
                         }
                         break;
                 }
