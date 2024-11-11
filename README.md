@@ -20,11 +20,16 @@ Parses all .dme files in the working directory and outputs them to a single .dm 
 
 **--mindex | --start-monster-index** (optional): start index to use for relative ids for monsters (5000-8999).
 
-**--sindex | --start-spell-index** (optional): start index to use for relative ids for spells (1300-3999).
+**--spindex | --start-spell-index** (optional): start index to use for relative ids for spells (1300-3999).
 
-**--nindex | --start-nation-index** (optional): start index to use for relative ids for spells (159-499).
+**--nindex | --start-nation-index** (optional): start index to use for relative ids for nations (159-499).
 
-**--eindex | --start-eventcode-index** (optional): start index to use for relative ids for spells (-300--5000).
+**--siindex | --start-site-index** (optional): start index to use for relative ids for sites (1700-3999)
+
+**--enindex | --start-enchnbr-index** (optional): start index to use for relative ids for enchantment numbers (200-9999).
+
+**--ecindex | --start-eventcode-index** (optional): start index to use for relative ids for event codes (-300--5000).
+
 
 Indices default to their minimum absolute value, so 1000 for weapons, -300 for event codes, etc. Setting an id close to it's maximum value is not recommended, as ids can then overflow outside the recommended range.
 
@@ -40,6 +45,15 @@ Instead of
 The compiler will then remap the '$1' to an index suitable for modded content. By default it will start at the minimum suggested from the modding manual, so for monsters $1 becomes 5000, $2 becomes 5001, etc.
 
 This remapping can be configured by passing a specific index as an argument when compiling. With this you can define your own ranges of ids that your mod operates with. This is useful if you wish to ensure compatibility with other mods.
+
+### Special Commands
+A few special commands are available that can only be interprited by the compiler. It will transform the input to the corresponding output for .dm files. These commands accept relative ids, and are as such useful for targeting enchantments and monsters added by the mod.
+
+In `#newspell` you can now type:
+`##globalenchantment <ench nbr>` shorthand for setting the `#effect 10081` and `#damage <ench nbr>`
+`##combatsummon <mnr>` shorthand for setting the `#effect 1` and `#damage <mnr>`
+`##ritualsummon <mnr>` shorthand for setting the `#effect 10001` and `#damage <mnr>`
+`##ritualsummoncom <mnr>` shorthand for setting the `#effect 10021` and `#damage <mnr>`
 
 ## Getting started
 This tool is executed from the command line, and is as such distributed bare-bones. Structuring the project and your developing environment is up to you. I've used Visual Studio Code for myself, which you can use as a base for your own mods. You can find this project [here](https://github.com/Ryxali/Dom-6-Dwarf-Faction).
