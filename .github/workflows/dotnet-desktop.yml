@@ -93,7 +93,7 @@ jobs:
       if: ${{ matrix.configuration == 'Release' }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.configuration, matrix.portable && '-portable' || '') }}
+        name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
         path: |
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
@@ -105,7 +105,7 @@ jobs:
       if: ${{ matrix.configuration == 'Debug' }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
+        name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
         path: |
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
