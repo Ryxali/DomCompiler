@@ -85,7 +85,7 @@ jobs:
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
       #run:  msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
-      run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:SelfContained=false -p:PublishProtocol=FileSystem -p:PublishSingleFile=true -p:AssemblyName=DomCompiler' , matrix.configuration, matrix.runtime) }}
+      run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:SelfContained=false -p:PublishProtocol=FileSystem -p:PublishSingleFile=true -p:AssemblyName=DomCompiler -p:TargetName=DomCompiler' , matrix.configuration, matrix.runtime) }}
  #     env:
  #       Appx_Bundle: Always
  #       Appx_Bundle_Platforms: x86|x64
@@ -94,8 +94,8 @@ jobs:
  #       PublishDir: $env:RUNNER_TEMP\Build
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-      if: ${{ matrix.configuration == 'Release' }}
     - name: Upload build artifacts (Release)
+      if: ${{ matrix.configuration == 'Release' }}
       uses: actions/upload-artifact@v3
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
@@ -104,8 +104,8 @@ jobs:
             ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.dll', matrix.configuration, matrix.runtime) }}
       
         
-      if: ${{ matrix.configuration == 'Debug' }}
     - name: Upload build artifacts (Debug)
+      if: ${{ matrix.configuration == 'Debug' }}
       uses: actions/upload-artifact@v3
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
