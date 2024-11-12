@@ -84,13 +84,14 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
-      env:
-        Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
-        Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{ matrix.configuration }}
-        PublishDir: $env:RUNNER_TEMP\Build
+      #run:  msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
+      run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:SelfContained=false -p:PublishSingleFile=true', matrix.configuration, matrix.runtime) }}
+ #     env:
+ #       Appx_Bundle: Always
+ #       Appx_Bundle_Platforms: x86|x64
+ #       Appx_Package_Build_Mode: StoreUpload
+ #       Configuration: ${{ matrix.configuration }}
+ #       PublishDir: $env:RUNNER_TEMP\Build
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
