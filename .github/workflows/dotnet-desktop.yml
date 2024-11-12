@@ -101,6 +101,7 @@ jobs:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
+            ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.dll', runner.temp) }}
       
         
@@ -111,5 +112,6 @@ jobs:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
+            ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.dll', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.pdb', runner.temp) }}
