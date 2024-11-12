@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Core Desktop
+name: .NET Core Desktop CI
 
 on:
   push:
@@ -84,19 +84,13 @@ jobs:
 
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      #run:  msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
       run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:OutDir={2}\DomCompiler\Build -p:SelfContained=false -p:PublishProtocol=FileSystem -p:PublishSingleFile=true -p:AssemblyName=DomCompiler -p:TargetName=DomCompiler', matrix.configuration, matrix.runtime, runner.temp ) }}
- #     env:
- #       Appx_Bundle: Always
- #       Appx_Bundle_Platforms: x86|x64
- #       Appx_Package_Build_Mode: StoreUpload
- #       Configuration: ${{ matrix.configuration }}
- #       PublishDir: $env:RUNNER_TEMP\Build
+
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts (Release)
       if: ${{ matrix.configuration == 'Release' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
@@ -107,7 +101,7 @@ jobs:
         
     - name: Upload build artifacts (Debug)
       if: ${{ matrix.configuration == 'Debug' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
