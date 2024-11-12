@@ -94,6 +94,18 @@ jobs:
  #       PublishDir: $env:RUNNER_TEMP\Build
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+      if: ${{ true }}
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
+        path: |
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.exe', matrix.configuration) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.dll', matrix.configuration) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.pdb', matrix.configuration) }}
+      
+        
+      if: ${{ !true }}
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
