@@ -85,7 +85,7 @@ jobs:
     # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
       #run:  msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle
-      run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:SelfContained=false -p:PublishProtocol=FileSystem -p:PublishSingleFile=true', matrix.configuration, matrix.runtime) }}
+      run: ${{ format('msbuild -p:Configuration={0} -p:RuntimeIdentifier={1} -p:SelfContained=false -p:PublishProtocol=FileSystem -p:PublishSingleFile=true' -p:AssemblyName=DomCompiler, matrix.configuration, matrix.runtime) }}
  #     env:
  #       Appx_Bundle: Always
  #       Appx_Bundle_Platforms: x86|x64
@@ -95,7 +95,17 @@ jobs:
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
       if: ${{ true }}
-    - name: Upload build artifacts
+    - name: Upload build artifacts (Release)
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
+        path: |
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.exe', matrix.configuration) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.dll', matrix.configuration) }}
+      
+        
+      if: ${{ !true }}
+    - name: Upload build artifacts (Debug)
       uses: actions/upload-artifact@v3
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
@@ -103,11 +113,3 @@ jobs:
             ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.exe', matrix.configuration) }}
             ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.dll', matrix.configuration) }}
             ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.pdb', matrix.configuration) }}
-      
-        
-      if: ${{ !true }}
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
-        path: ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\', matrix.configuration) }}
