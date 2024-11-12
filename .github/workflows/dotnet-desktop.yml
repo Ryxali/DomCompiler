@@ -96,6 +96,7 @@ jobs:
         path: |
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
+            ${{ format('{0}\DomCompiler\Build\*.json', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.dll', runner.temp) }}
       
         
@@ -108,4 +109,5 @@ jobs:
             ${{ format('{0}\DomCompiler\Build\*.exe', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\DomCompiler', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.dll', runner.temp) }}
+            ${{ format('{0}\DomCompiler\Build\*.json', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.pdb', runner.temp) }}
