@@ -100,8 +100,8 @@ jobs:
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
-            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.exe', matrix.configuration) }}
-            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.dll', matrix.configuration) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.exe', matrix.configuration, matrix.runtime) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.dll', matrix.configuration, matrix.runtime) }}
       
         
       if: ${{ !true }}
@@ -110,6 +110,6 @@ jobs:
       with:
         name: ${{ format('{0}-{1}', matrix.runtime, matrix.configuration) }}
         path: |
-            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.exe', matrix.configuration) }}
-            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.dll', matrix.configuration) }}
-            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\*.pdb', matrix.configuration) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.exe', matrix.configuration, matrix.runtime) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.dll', matrix.configuration, matrix.runtime) }}
+            ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\{1}\*.pdb', matrix.configuration, matrix.runtime) }}
