@@ -97,4 +97,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\', env:configuration) }}
+        path: ${{ format('D:\a\DomCompiler\DomCompiler\DomCompiler\obj\{0}\netcoreapp3.1\', env.configuration) }}
