@@ -162,7 +162,6 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        configuration: [Release]
         runtime: [linux-x64, win-x64, osx-x64]
         #runtime: [win-x64]
         portable: [false]
