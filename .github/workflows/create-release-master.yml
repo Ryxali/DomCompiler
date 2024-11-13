@@ -170,7 +170,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ format('{0}{1}Release', matrix.runtime, matrix.portable && '-portable' || '') }}
+          name: ${{ format('{0}-Release{1}', matrix.runtime, matrix.portable && '-portable' || '') }}
       
       - name: Zip artifact
         run: ${{ format('7z a DomCompiler-{0}{1}.zip DomCompiler.*', matrix.runtime, matrix.portable && '-portable' || '') }}
