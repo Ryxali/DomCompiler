@@ -142,15 +142,15 @@ jobs:
 
     steps:
       - name: Create Release
-        run: echo HI
-#        uses: actions/create-release
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#          body_path: ReleaseStub.md
-#          draft: true
+        uses: actions/create-release
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body_path: ReleaseStub.md
+          draft: true
+
   upload-artifacts:
-    needs: [create-release, build]
+    needs: create-release
     runs-on: windows-latest
     strategy:
       matrix:
@@ -166,9 +166,11 @@ jobs:
           name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
       
       - name: Zip artifact
-        run: ${{ format('7z -a {0}-{1}{2}.zip {0}-{1}{2}\*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+        run: ${{ format('7z a {0}-{1}{2}.zip {0}-{1}{2}\*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
 
-      - name: LS
-        run: ls
+      - name: Upload artifact
+        uses: xresloader/upload-to-github-release@v1
+        with:
+          file: ${{ format('{0}-{1}{2}.zip', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
 
 
