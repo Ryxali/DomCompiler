@@ -46,8 +46,9 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
-        runtime: [linux-x64, win-x64, osx-x64]
+        configuration: [Release]
+        #runtime: [linux-x64, win-x64, osx-x64]
+        runtime: [win-x64]
         portable: [false]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
@@ -145,7 +146,21 @@ jobs:
           path: artifacts
 
       - name: Display structure of downloaded files
-        run: ls -R artifacts
+        run: ls -d artifacts
+
+      - name: Collect folders
+        run: |
+          {
+            echo 'FILELIST<<EOF'
+            ls -d artifacts
+            echo EOF
+          }
+
+      - name: Do thing with folder
+        run: |
+          for i in $FILELIST; do
+            echo "Do something with file ${i}"
+          done
 
 #      - name: Create Release
 #        uses: actions/create-release
