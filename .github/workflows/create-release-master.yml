@@ -148,7 +148,7 @@ jobs:
       - name: Display structure of downloaded files
         run: |
           cd artifacts
-          ls -d
+          ls
           cd ..
 
       - name: Collect folders
@@ -156,7 +156,7 @@ jobs:
           {
             cd artifacts
             echo 'FILELIST<<EOF'
-            ls -d
+            ls
             echo EOF
             cd ..
           }
