@@ -169,7 +169,7 @@ jobs:
         run: ${{ format('7z a {0}-{1}{2}.zip {0}-{1}{2}\*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
 
       - name: Upload artifact
-        uses: xresloader/upload-to-github-release@v1
+        uses: xresloader/upload-to-github-release@v1.6.0
         with:
           file: ${{ format('{0}-{1}{2}.zip', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
 
