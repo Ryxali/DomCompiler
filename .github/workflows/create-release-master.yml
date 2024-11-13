@@ -173,6 +173,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+          
+      - name: LS
+        run: ls
       
       - name: Zip artifact
         run: ${{ format('7z a {0}-{1}{2}.zip {0}-{1}{2}\*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
