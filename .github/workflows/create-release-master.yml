@@ -36,13 +36,9 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Core Desktop CI
+name: Create Release
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: workflow_dispatch
 
 jobs:
 
@@ -50,10 +46,8 @@ jobs:
 
     strategy:
       matrix:
-        #configuration: [Debug, Release]
-        #runtime: [linux-x64, win-x64, osx-x64]
-        configuration: [Release]
-        runtime: [win-x64]
+        configuration: [Debug, Release]
+        runtime: [linux-x64, win-x64, osx-x64]
         portable: [false]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
@@ -138,3 +132,25 @@ jobs:
         name: "SampleMod-VSCode"
         path: SampleMod-VSCode
         include-hidden-files: true
+  
+  create-release:
+    needs: make-sample
+    runs-on: windows-latest
+
+    steps:
+
+      - name: Download Artifacts
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+#      - name: Create Release
+#        uses: actions/create-release
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: Release ${{ github.ref }}
+#          body_path: ReleaseStub.md
+#          draft: true
