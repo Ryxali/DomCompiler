@@ -66,7 +66,8 @@ jobs:
     - id: set-matrix
       env:
         CFG: ${{ toJSON(matrix) }}
-      run: jq -r -n 'env.CFG | fromjson | @json "::set-output name=result::\(.data)"'
+      run: jq -r -n 'env.CFG | fromjson | @json "::echo name=result::\(.data) >> $GITHUB_OUTPUT"'
+        #jq -r -n 'env.CFG | fromjson | @json "::set-output name=result::\(.data)"'
 
     - name: Checkout
       uses: actions/checkout@v4
