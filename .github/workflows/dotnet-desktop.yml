@@ -127,7 +127,7 @@ jobs:
     - name: Download Artifact
       uses: actions/download-artifact@v4
       with:
-        name: win-64-Release
+        name: win-x64-Release
     
     - name: Copy compiler into mod stub
       run: 7z e -o SampleMod-VSCode\compiler\win64 win-64-Release.zip
