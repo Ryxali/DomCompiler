@@ -173,9 +173,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
-          
-      - name: LS
-        run: ls
       
       - name: Zip artifact
         run: ${{ format('7z a {0}-{1}{2}.zip DomCompiler.*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
@@ -184,5 +181,25 @@ jobs:
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
           file: ${{ format('{0}-{1}{2}.zip', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+
+  
+  upload-sample:
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+        
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: SampleMod-VSCode
+          path: SampleMod-VSCode
+      
+      - name: Zip artifact
+        run: 7z a SampleMod-VSCode.zip SampleMod-VSCode
+
+      - name: Upload artifact
+        uses: xresloader/upload-to-github-release@v1.6.0
+        with:
+          file: SampleMod-VSCode.zip
 
 
