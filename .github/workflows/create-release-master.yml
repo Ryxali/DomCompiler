@@ -51,9 +51,6 @@ jobs:
         runtime: [win-x64]
         portable: [false]
 
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
@@ -63,12 +60,6 @@ jobs:
 
       
     steps:
-    - id: set-matrix
-      env:
-        CFG: ${{ toJSON(matrix) }}
-      run: jq -r -n 'env.CFG | fromjson | @json "::echo name=result::\(.data) >> $GITHUB_OUTPUT"'
-        #jq -r -n 'env.CFG | fromjson | @json "::set-output name=result::\(.data)"'
-
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -162,7 +153,11 @@ jobs:
     needs: [create-release, build]
     runs-on: windows-latest
     strategy:
-      matrix: ${{ fromJson(needs.build.outputs.matrix) }}
+      matrix:
+        configuration: [Release]
+        #runtime: [linux-x64, win-x64, osx-x64]
+        runtime: [win-x64]
+        portable: [false]
     steps:
 
       - name: Download artifact
