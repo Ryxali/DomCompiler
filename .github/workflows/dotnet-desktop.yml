@@ -130,7 +130,7 @@ jobs:
         name: win-x64-Release
     
     - name: Copy compiler into mod stub
-      run: 7z e win-64-Release.zip -oSampleMod-VSCode\compiler\win64
+      run: 7z e win-x64-Release.zip -oSampleMod-VSCode\compiler\win64
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
