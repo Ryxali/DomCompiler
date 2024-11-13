@@ -176,8 +176,8 @@ jobs:
         run: ${{ format('7z a DomCompiler-{0}{1}.zip DomCompiler.*', matrix.runtime, matrix.portable && '-portable' || '') }}
 
       - name: eeeeee
-        run: echo ${{ needs.create-release.result.outputs.release_id }}
-        
+        run:  ${{ format('echo {0}', needs.create-release.result.outputs.release_id) }}
+
       - name: Upload artifact
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
@@ -200,7 +200,7 @@ jobs:
         run: 7z a SampleMod-VSCode.zip SampleMod-VSCode
 
       - name: eeeeee
-        run: echo ${{ needs.create-release.result.outputs.release_id }}
+        run:  ${{ format('echo {0}', needs.create-release.result.outputs.release_id) }}
 
       - name: Upload artifact
         uses: xresloader/upload-to-github-release@v1.6.0
