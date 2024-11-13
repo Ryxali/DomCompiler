@@ -142,6 +142,8 @@ jobs:
 
     steps:
       - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.ref }}
