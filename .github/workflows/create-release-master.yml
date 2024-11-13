@@ -151,10 +151,10 @@ jobs:
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          #tag_name: ${{ github.ref }}
+          #release_name: Release ${{ github.ref }}
           body_path: ReleaseStub.md
           draft: true
 
