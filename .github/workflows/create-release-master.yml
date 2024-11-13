@@ -147,8 +147,8 @@ jobs:
 
       - name: Display structure of downloaded files
         run: |
-          cd artifacts
-          ls
+          cd artifacts &&
+          ls &&
           cd ..
 
       - name: Collect folders
