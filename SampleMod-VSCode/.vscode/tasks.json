@@ -1,0 +1,21 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build & Deploy",
+            "type": "shell",
+            "windows":
+            {
+                // Need to double escape the " around paths for it to pass as an argument correctly for some reason.
+                "command": "./compiler\\win64\\DomCompiler.exe \\\"${env:appdata}\\Dominions6\\mods\\SampleMod\\SampleMod.dm\\\" \\\"SampleMod\\\""
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

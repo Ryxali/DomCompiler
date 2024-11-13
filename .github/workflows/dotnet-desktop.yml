@@ -113,3 +113,27 @@ jobs:
             ${{ format('{0}\DomCompiler\Build\*.dll', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.json', runner.temp) }}
             ${{ format('{0}\DomCompiler\Build\*.pdb', runner.temp) }}
+
+  make-sample:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: win-64-Release
+    
+    - name: Copy compiler into mod stub
+      run: 7z e -o SampleMod-VSCode\compiler\win64 win-64-Release.zip
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: "SampleMod-VSCode"
+        path: SampleMod-VSCode

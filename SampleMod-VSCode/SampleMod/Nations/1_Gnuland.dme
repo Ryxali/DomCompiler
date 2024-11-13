@@ -1,0 +1,10 @@
+#newnation
+#name "Gnuland"
+#epithet "Kingdom of Gnus"
+#era 2
+#descr "This is a test nation, it has no units and
+requires more work to be useful."
+#color 0.8 0.1 0.2
+#secondarycolor 0.9 0.9 0.9
+#homerealm 10
+#end
