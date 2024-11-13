@@ -149,11 +149,12 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Create Release
+        id: create-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         uses: softprops/action-gh-release@v2
         with:
-          body_path: ReleaseStub.md
+          default_release_body_path: ReleaseStub.md
           draft: true
 
   upload-artifacts:
@@ -166,20 +167,20 @@ jobs:
         #runtime: [win-x64]
         portable: [false]
     steps:
-        
+        # steps.set-random-number.outputs.random-number
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+          name: ${{ format('{0}{1}Release', matrix.runtime, matrix.portable && '-portable' || '') }}
       
       - name: Zip artifact
-        run: ${{ format('7z a {0}-{1}{2}.zip DomCompiler.*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+        run: ${{ format('7z a DomCompiler-{0}{1}.zip DomCompiler.*', matrix.runtime, matrix.portable && '-portable' || '') }}
 
       - name: Upload artifact
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
-          file: ${{ format('{0}-{1}{2}.zip', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
-          update_latest_release: true
+          file: ${{ format('DomCompiler-{0}{1}.zip', matrix.runtime) }}
+          release_id: ${{ needs.create-release.result.outputs.release_id }}
 
   
   upload-sample:
@@ -200,6 +201,6 @@ jobs:
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
           file: SampleMod-VSCode.zip
-          update_latest_release: true
+          release_id: ${{ needs.create-release.result.outputs.release_id }}
 
 
