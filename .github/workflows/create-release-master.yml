@@ -151,9 +151,11 @@ jobs:
       - name: Collect folders
         run: |
           {
+            cd artifacts
             echo 'FILELIST<<EOF'
-            ls -d artifacts
+            ls -d
             echo EOF
+            cd ..
           }
 
       - name: Do thing with folder
