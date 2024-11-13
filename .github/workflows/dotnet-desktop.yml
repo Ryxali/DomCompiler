@@ -52,7 +52,7 @@ jobs:
       matrix:
         configuration: [Debug, Release]
         runtime: [linux-x64, win-x64, osx-x64]
-        portable: [true, false]
+        portable: [false]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -130,7 +130,7 @@ jobs:
         name: win-x64-Release
     
     - name: Copy compiler into mod stub
-      run: 7z e win-x64-Release.zip -oSampleMod-VSCode\compiler\win64
+      run: 7z x win-x64-Release.zip -oSampleMod-VSCode\compiler\win64
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
