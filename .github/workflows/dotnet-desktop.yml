@@ -50,8 +50,10 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
-        runtime: [linux-x64, win-x64, osx-x64]
+        #configuration: [Debug, Release]
+        #runtime: [linux-x64, win-x64, osx-x64]
+        configuration: [Release]
+        runtime: [win-x64]
         portable: [false]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
@@ -129,6 +131,9 @@ jobs:
       with:
         name: win-x64-Release
     
+    - name: list files
+      run: ls
+
     - name: Copy compiler into mod stub
       run: 7z x win-x64-Release.zip -oSampleMod-VSCode\compiler\win64
 
