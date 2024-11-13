@@ -51,13 +51,23 @@ jobs:
         runtime: [win-x64]
         portable: [false]
 
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
       Solution_Name: DomCompiler.sln                            # Replace with your solution name, i.e. MyWpfApp.sln.
 
+
+      
     steps:
+    - id: set-matrix
+      env:
+        CFG: ${{ toJSON(matrix) }}
+      run: jq -r -n 'env.CFG | fromjson | @json "::set-output name=result::\(.data)"'
+
     - name: Checkout
       uses: actions/checkout@v4
       with:
@@ -139,38 +149,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Display structure of downloaded files
-        run: |
-          cd artifacts &&
-          ls &&
-          cd ..
-
-      - name: Collect folders
-        run: |
-          {
-            cd artifacts
-            echo 'FILELIST<<EOF'
-            ls
-            echo EOF
-            cd ..
-          }
-
-      - name: Do thing with folder
-        run: |
-          for i in $FILELIST; do
-            echo "Do something with file ${i}"
-          done
-
-#      - name: Create Release
+      - name: Create Release
+        run: echo HI
 #        uses: actions/create-release
 #        with:
 #          tag_name: ${{ github.ref }}
 #          release_name: Release ${{ github.ref }}
 #          body_path: ReleaseStub.md
 #          draft: true
+  upload-artifacts:
+    needs: [create-release, build]
+    runs-on: windows-latest
+    strategy:
+      matrix: ${{ fromJson(needs.build.outputs.matrix) }}
+    steps:
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ format('{0}-{1}{2}', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+      
+      - name: Zip artifact
+        run: ${{ format('7z -a {0}-{1}{2}.zip {0}-{1}{2}\*', matrix.runtime, matrix.portable && '-portable' || '', matrix.configuration) }}
+
+      - name: LS
+        run: ls
+
+
