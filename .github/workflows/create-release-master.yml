@@ -174,5 +174,5 @@ jobs:
           body_path: ReleaseStub.md
           draft: true
           files: |
-            $ARTIFACT_BUNDLES
+            ${{ steps.zip-artifacts.outputs.ARTIFACT_BUNDLES }}
 
