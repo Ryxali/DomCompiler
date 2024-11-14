@@ -57,17 +57,16 @@ jobs:
         uses: actions/checkout@v4
       - name: Set color
         id: color-selector
-        run: ls
+        run: |
+            echo "SELECTED_COLOR=\"\"" >> "$GITHUB_OUTPUT"
+            for d in */ ; do
+                echo "7z a $d.zip $d/*"
+                echo "SELECTED_COLOR=$SELECTED_COLOR\n$d" >> "$GITHUB_OUTPUT"
+            done
         #echo "SELECTED_COLOR=green;red;white" >> "$GITHUB_OUTPUT"
       - name: Get color
         env:
           SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
-        run: |
-            for d in */ ; do
-                echo "$d"
-            done
+        run: echo "It's $SELECTED_COLOR"
         
         #echo "The selected color is $SELECTED_COLOR"
-
-
-
