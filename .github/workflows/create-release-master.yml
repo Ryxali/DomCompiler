@@ -161,7 +161,7 @@ jobs:
                     CONCATED="$CONCATED$d\n"
                 fi
             done
-            echo "SELECTED_COLOR=$CONCATED" >> "$GITHUB_OUTPUT"
+            echo "$ARTIFACT_BUNDLES=$CONCATED" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create-release
