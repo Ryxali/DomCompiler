@@ -161,6 +161,7 @@ jobs:
                     CONCATED="$CONCATED$d\n"
                 fi
             done
+            echo "Output bundles $CONCATED"
             echo "$ARTIFACT_BUNDLES=$CONCATED" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
