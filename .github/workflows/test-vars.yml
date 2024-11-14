@@ -61,7 +61,7 @@ jobs:
             echo "SELECTED_COLOR=\"\"" >> "$GITHUB_OUTPUT"
             for d in */ ; do
                 echo "7z a $d.zip $d/*"
-                echo "SELECTED_COLOR=$SELECTED_COLOR\n$d" >> "$GITHUB_OUTPUT"
+                echo "SELECTED_COLOR=${{steps.color-selector.outputs.SELECTED_COLOR}}\n$d" >> "$GITHUB_OUTPUT"
             done
         #echo "SELECTED_COLOR=green;red;white" >> "$GITHUB_OUTPUT"
       - name: Get color
