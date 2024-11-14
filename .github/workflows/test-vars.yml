@@ -58,12 +58,12 @@ jobs:
       - name: Set color
         id: color-selector
         run: |
-            CONCATED = ""
+            CONCATED=""
             echo "SELECTED_COLOR=\"\"" >> "$GITHUB_OUTPUT"
             for d in * ; do
                 if [ -d "$f" ]; then
                     echo "7z a $d.zip $d/*"
-                    CONCATED = "$CONCATED$d\n"
+                    CONCATED="$CONCATED$d\n"
                 fi
             done
             echo "SELECTED_COLOR=$CONCATED" >> "$GITHUB_OUTPUT"
