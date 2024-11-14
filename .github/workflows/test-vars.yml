@@ -55,7 +55,7 @@ jobs:
     steps:
     - name: Step1
       id: locations
-      run: echo "FILE_LOCATIONS=path0" >> $GITHUB_OUTPUT
+      run: echo "FILE_LOCATIONS=path0" >> "$GITHUB_OUTPUT"
     - name: Step2 Read
       env:
         FILE_LOCATIONS: ${{ steps.locations.FILE_LOCATIONS }}
