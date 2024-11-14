@@ -57,6 +57,8 @@ jobs:
       id: locations
       run: echo "FILE_LOCATIONS=path0" >> $GITHUB_OUTPUT
     - name: Step2 Read
-      run: echo "The path is ${{ steps.locations.FILE.LOCATIONS }}"
+      env:
+        FILE_LOCATIONS: ${{ steps.locations.FILE_LOCATIONS }}
+      run: echo "The path is $FILE_LOCATIONS"
 
 
