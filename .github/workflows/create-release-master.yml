@@ -158,7 +158,7 @@ jobs:
             for d in * ; do
                 if [ -d "$d" ]; then
                     7z a $d.zip $d/*
-                    CONCATED="$CONCATED$d\n"
+                    CONCATED="$CONCATED$d.zip\n"
                 fi
             done
             echo "Output bundles $CONCATED"
@@ -173,5 +173,6 @@ jobs:
         with:
           body_path: ReleaseStub.md
           draft: true
-          files: $ARTIFACT_BUNDLES
+          files: |
+            $ARTIFACT_BUNDLES
 
