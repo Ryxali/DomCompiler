@@ -53,6 +53,8 @@ jobs:
 
       
     steps:
+      - name: Checkout ReleaseStub
+        uses: actions/checkout@v4
       - name: Set color
         id: color-selector
         run: echo "SELECTED_COLOR=green;red;white" >> "$GITHUB_OUTPUT"
