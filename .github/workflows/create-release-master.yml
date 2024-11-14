@@ -162,7 +162,7 @@ jobs:
                 fi
             done
             echo "Output bundles $CONCATED"
-            echo "$ARTIFACT_BUNDLES=$CONCATED" >> "$GITHUB_OUTPUT"
+            echo "ARTIFACT_BUNDLES=$CONCATED" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create-release
