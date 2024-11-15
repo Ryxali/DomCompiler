@@ -317,7 +317,7 @@ namespace DomCompiler
 
                         if (entryMatch.IsMatch(result))
                         {
-                            result = binaryNumberReplacement.Replace(result, r => Convert.ToInt32(r, 2));
+                            result = binaryNumberReplacement.Replace(result, r => Convert.ToInt32(r, 2).toString());
                             raw.Add(result);
                             var img = imageMatch.Match(result);
                             if (img.Success && !imagePaths.Contains(img.Value))
