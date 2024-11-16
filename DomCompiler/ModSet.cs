@@ -27,7 +27,7 @@ namespace DomCompiler
         private readonly Regex monsterIdMatch = new Regex(@"(?<=#((transform)|(monpresentrec)|(damage)|(ownsmonrec)|(\S*shape\S*)|(twiceborn)|(lich)|(animated)|(\S*sum\S*)|(templetrainer)|(slaver)|(assassin)|(\S*mnr\S*)|(\S*mon\S*)|(\S*com\S*)|(\S*unit\S*)|(\S*rec\S*)|(\S*scout\S*)|(\S*hero\S*)|(\S*god\S*)|(guardspirit))\s+)\$\d+");
         private readonly Regex siteIdMatch = new Regex(@"(?<=#(\S*site\S*)\s+)\$\d+");
         private readonly Regex spellIdMatch = new Regex(@"(?<=#(\S*spell\S*)\s+)\$\d+");
-        private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(newtemplate))\s+)\$\d+");
+        private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(\S*owner\S*)|(newtemplate))\s+)\$\d+");
         private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
 
