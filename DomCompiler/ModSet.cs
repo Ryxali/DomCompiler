@@ -31,8 +31,6 @@ namespace DomCompiler
         private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
 
-        private readonly Regex binaryNumberReplacement = new Regex(@"(?<=0b)\d+");
-
         #region Special Commands
         private static readonly Regex globalEnchantment = new Regex(@"(?<=##globalenchantment\s+)\$?-?\d+");
         private static readonly Regex combatSummon = new Regex(@"(?<=##combatsummon\s+)\$?-?\d+");
@@ -317,7 +315,6 @@ namespace DomCompiler
 
                         if (entryMatch.IsMatch(result))
                         {
-                            result = binaryNumberReplacement.Replace(result, r => Convert.ToInt32(r.Value, 2).ToString());
                             raw.Add(result);
                             var img = imageMatch.Match(result);
                             if (img.Success && !imagePaths.Contains(img.Value))
