@@ -262,11 +262,6 @@ namespace DomCompiler
             return false;
         }
 
-        private int MagicPathToInt(char c, int latest, int[] pathsArr)
-        {
-            
-        }
-
 
         public IEnumerable<string> GetImagePaths() => imagePaths;
 
