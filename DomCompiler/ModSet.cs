@@ -169,7 +169,7 @@ namespace DomCompiler
                 var pathArg = isMagicPath.Value;
                 if(!int.TryParse(pathArg, out _))
                 {
-                    var entryName = entryMatch.Match(line).Value;
+                    var entryName = commandMatch.Match(line).Value;
                     int latest = -1;
                     for(int i = 0; i < magicPathsArr.Length; i++)
                         magicPathsArr[i] = 0;
