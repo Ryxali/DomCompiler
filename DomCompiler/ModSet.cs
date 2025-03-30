@@ -269,58 +269,62 @@ namespace DomCompiler
                 var maskStr = isCustomMagicPath.Groups[2].Value;
                 var chance = isCustomMagicPath.Groups[3].Value;
                 int mask = 0;
-                for(int i = 0; i < maskStr.Length; i++)
+                if(!int.TryParse(maskStr, out _))
                 {
-                    var c = maskStr[i];
-                    switch(c)
+                    for(int i = 0; i < maskStr.Length; i++)
                     {
-                        case 'f':
-                        case 'F':
-                            mask |= 1 << 0;
-                            break;
-                        case 'a':
-                        case 'A':
-                            mask |= 1 << 1;
-                            break;
-                        case 'w':
-                        case 'W':
-                            mask |= 1 << 2;
-                            break;
-                        case 'e':
-                        case 'E':
-                            mask |= 1 << 3;
-                            break;
-                        case 's':
-                        case 'S':
-                            mask |= 1 << 4;
-                            break;
-                        case 'd':
-                        case 'D':
-                            mask |= 1 << 5;
-                            break;
-                        case 'n':
-                        case 'N':
-                            mask |= 1 << 6;
-                            break;
-                        case 'g':
-                        case 'G':
-                            mask |= 1 << 7;
-                            break;
-                        case 'b':
-                        case 'B':
-                            mask |= 1 << 8;
-                            break;
-                        case 'h':
-                        case 'H':
-                            mask |= 1 << 9;
-                            break;
+                        var c = maskStr[i];
+                        switch(c)
+                        {
+                            case 'f':
+                            case 'F':
+                                mask |= 128;
+                                break;
+                            case 'a':
+                            case 'A':
+                                mask |= 256;
+                                break;
+                            case 'w':
+                            case 'W':
+                                mask |= 512;
+                                break;
+                            case 'e':
+                            case 'E':
+                                mask |= 1024;
+                                break;
+                            case 's':
+                            case 'S':
+                                mask |= 2048;
+                                break;
+                            case 'd':
+                            case 'D':
+                                mask |= 4096;
+                                break;
+                            case 'n':
+                            case 'N':
+                                mask |= 8192;
+                                break;
+                            case 'g':
+                            case 'G':
+                                mask |= 16384;
+                                break;
+                            case 'b':
+                            case 'B':
+                                mask |= 32768;
+                                break;
+                            case 'h':
+                            case 'H':
+                                mask |= 65536;
+                                break;
+                        }
                     }
+                    output.Append(command);
+                    output.Append(' ');
+                    output.Append(mask);
+                    output.Append(' ');
+                    output.Append(chance);
+                    return true;
                 }
-                output.Append(command);
-                output.Append(' ');
-                output.Append(mask);
-                output.Append(' ');
-                output.Append(chance);
             }
             return false;
         }
