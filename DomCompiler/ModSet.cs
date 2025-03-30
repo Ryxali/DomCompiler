@@ -265,9 +265,9 @@ namespace DomCompiler
             var isCustomMagicPath = customMagicMatch.Match(line);
             if(isCustomMagicPath.Success)
             {
-                var command = isCustomMagicPath.Groups[1];
-                var maskStr = isCustomMagicPath.Groups[2];
-                var chance = isCustomMagicPath.Groups[3];
+                var command = isCustomMagicPath.Groups[1].Value;
+                var maskStr = isCustomMagicPath.Groups[2].Value;
+                var chance = isCustomMagicPath.Groups[3].Value;
                 int mask = 0;
                 for(int i = 0; i < maskStr.Length; i++)
                 {
