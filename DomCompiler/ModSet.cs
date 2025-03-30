@@ -30,6 +30,8 @@ namespace DomCompiler
         private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(\S*owner\S*)|(newtemplate))\s+)\$\d+");
         private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
+        private readonly Regex magicMatch = new Regex(@"(#((magicskill)|(magicboost)|(gems)|(mainpath)|(mainlevel)|(secondarypath)|(secondarylevel)|(magic)))\s+([a-zA-Z0-9]+)");
+        //private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(custommagic))\s+)\$\d+");
 
         #region Special Commands
         private static readonly Regex globalEnchantment = new Regex(@"(?<=##globalenchantment\s+)\$?-?\d+");
@@ -40,6 +42,7 @@ namespace DomCompiler
         #endregion
 
         private readonly StringBuilder parserBuffer = new StringBuilder();
+        private int[] magicPathsArr = new int[10];
 
 
         // #newmonster $3
@@ -99,6 +102,7 @@ namespace DomCompiler
             }
         }
 
+
         public void Parse(string path)
         {
             using (var reader = new StreamReader(File.OpenRead(path)))
@@ -156,7 +160,112 @@ namespace DomCompiler
                 output.Append(id.ToString());
                 return true;
             }
+
+            var isMagicPath = magicMatch.Match(line);
+            if(isMagicPath.Success)
+            {
+
+                var pathArg = isMagicPath.Groups[2].Value;
+                if(!int.TryParse(pathArg, out _))
+                {
+                    var secondArg = isMagicPath.Groups.Count > 2 ? isMagicPath.Groups[secondArgIndex] : null;
+                    int latest = -1;
+                    for(int i = 0; i < magicPathsArr.Length; i++)
+                        magicPathsArr[i] = 0;
+                    for(int i = 0; i < pathArg.Length; i++)
+                    {
+                        var c =  pathArg[i];
+                        if(Char.IsNumber(c))
+                        { 
+                            int number = Char.GetNumericValue(c);
+                            while(i < pathArg.Length+1 && Char.IsNumber(pathArg[i+1]))
+                            {
+                                i++;
+                                number = number * 10 + Char.GetNumericValue(pathArg[i]));
+                            }
+                            if(latest >= 0)
+                            {
+                                magicPathsArr[latest] += number-1;
+                            }
+                        }
+                        else
+                        {
+                            switch(c)
+                            {
+                                case 'f':
+                                case 'F':
+                                    magicPathsArr[0]++;
+                                    latest = 0;
+                                    break;
+                                case 'a':
+                                case 'A':
+                                    magicPathsArr[1]++;
+                                    latest = 1;
+                                    break;
+                                case 'w':
+                                case 'W':
+                                    magicPathsArr[2]++;
+                                    latest = 2;
+                                    break;
+                                case 'e':
+                                case 'E':
+                                    magicPathsArr[3]++;
+                                    latest = 3;
+                                    break;
+                                case 's':
+                                case 'S':
+                                    magicPathsArr[4]++;
+                                    latest = 4;
+                                    break;
+                                case 'd':
+                                case 'D':
+                                    magicPathsArr[5]++;
+                                    latest = 5;
+                                    break;
+                                case 'n':
+                                case 'N':
+                                    magicPathsArr[6]++;
+                                    latest = 6;
+                                    break;
+                                case 'g':
+                                case 'G':
+                                    magicPathsArr[7]++;
+                                    latest = 7;
+                                    break;
+                                case 'b':
+                                case 'B':
+                                    magicPathsArr[8]++;
+                                    latest = 8;
+                                    break;
+                                case 'h':
+                                case 'H':
+                                    magicPathsArr[9]++;
+                                    latest = 9;
+                                    break;
+                            }
+                        }
+                    }
+                    for(int i = 0; i < magicPathsArr.Length; i++)
+                    {
+                        var count = magicPathsArr[i];
+                        if(count > 0)
+                        {
+                            output.AppendLine(isMagicPath.Groups[1].Value);
+                            output.Append(' ');
+                            output.Append(i);
+                            output.Append(' ');
+                            output.Append(count);
+                        }
+                    }
+                    return true;
+                }
+            }
             return false;
+        }
+
+        private int MagicPathToInt(char c, int latest, int[] pathsArr)
+        {
+            
         }
 
 
