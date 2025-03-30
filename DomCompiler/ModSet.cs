@@ -30,7 +30,7 @@ namespace DomCompiler
         private readonly Regex nationIdMatch = new Regex(@"(?<=#((nat)|(restricted)|(\S*nation\S*)|(\S*owner\S*)|(newtemplate))\s+)\$\d+");
         private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
-        private readonly Regex magicMatch = new Regex(@"(#((magicskill)|(magicboost)|(gems)|(mainpath)|(mainlevel)|(secondarypath)|(secondarylevel)|(magic)))\s+([a-zA-Z0-9]+)");
+        private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(magicboost)|(gems)|(mainpath)|(mainlevel)|(secondarypath)|(secondarylevel)|(magic))\s+)[a-zA-Z0-9]+");
         //private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(custommagic))\s+)\$\d+");
 
         #region Special Commands
@@ -165,9 +165,10 @@ namespace DomCompiler
             if(isMagicPath.Success)
             {
 
-                var pathArg = isMagicPath.Groups[2].Value;
+                var pathArg = isMagicPath.Value;
                 if(!int.TryParse(pathArg, out _))
                 {
+                    var entryName = entryMatch.Match(line).Value;
                     int latest = -1;
                     for(int i = 0; i < magicPathsArr.Length; i++)
                         magicPathsArr[i] = 0;
@@ -249,7 +250,7 @@ namespace DomCompiler
                         var count = magicPathsArr[i];
                         if(count > 0)
                         {
-                            output.AppendLine(isMagicPath.Groups[1].Value);
+                            output.AppendLine(entryName);
                             output.Append(' ');
                             output.Append(i);
                             output.Append(' ');
