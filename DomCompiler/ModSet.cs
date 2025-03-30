@@ -31,6 +31,7 @@ namespace DomCompiler
         private readonly Regex enchantmentNumberMatch = new Regex(@"(?<=#\S*ench\S*\s+)\$\d+");
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
         private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(magicboost)|(gems)|(mainpath)|(mainlevel)|(secondarypath)|(secondarylevel)|(magic))\s+)[a-zA-Z0-9]+");
+        private readonly Regex customMagicMatch = new Regex(@"(#custommagic)\s+([a-zA-Z0-9]+)\s+([a-zA-Z0-9]+)");
         //private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(custommagic))\s+)\$\d+");
 
         #region Special Commands
@@ -259,6 +260,67 @@ namespace DomCompiler
                     }
                     return true;
                 }
+            }
+
+            var isCustomMagicPath = customMagicMatch.Match(line);
+            if(isCustomMagicPath.Success)
+            {
+                var command = isCustomMagicPath.Groups[1];
+                var maskStr = isCustomMagicPath.Groups[2];
+                var chance = isCustomMagicPath.Groups[3];
+                int mask = 0;
+                for(int i = 0; i < maskStr.Length; i++)
+                {
+                    var c = maskStr[i];
+                    switch(c)
+                    {
+                        case 'f':
+                        case 'F':
+                            mask |= 1 << 0;
+                            break;
+                        case 'a':
+                        case 'A':
+                            mask |= 1 << 1;
+                            break;
+                        case 'w':
+                        case 'W':
+                            mask |= 1 << 2;
+                            break;
+                        case 'e':
+                        case 'E':
+                            mask |= 1 << 3;
+                            break;
+                        case 's':
+                        case 'S':
+                            mask |= 1 << 4;
+                            break;
+                        case 'd':
+                        case 'D':
+                            mask |= 1 << 5;
+                            break;
+                        case 'n':
+                        case 'N':
+                            mask |= 1 << 6;
+                            break;
+                        case 'g':
+                        case 'G':
+                            mask |= 1 << 7;
+                            break;
+                        case 'b':
+                        case 'B':
+                            mask |= 1 << 8;
+                            break;
+                        case 'h':
+                        case 'H':
+                            mask |= 1 << 9;
+                            break;
+                    }
+                }
+                output.Append(command);
+                output.Append(' ');
+                output.Append(mask);
+                output.Append(' ');
+                output.Append(chance);
             }
             return false;
         }
