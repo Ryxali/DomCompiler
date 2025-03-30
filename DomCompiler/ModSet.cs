@@ -168,7 +168,6 @@ namespace DomCompiler
                 var pathArg = isMagicPath.Groups[2].Value;
                 if(!int.TryParse(pathArg, out _))
                 {
-                    var secondArg = isMagicPath.Groups.Count > 2 ? isMagicPath.Groups[secondArgIndex] : null;
                     int latest = -1;
                     for(int i = 0; i < magicPathsArr.Length; i++)
                         magicPathsArr[i] = 0;
@@ -177,11 +176,11 @@ namespace DomCompiler
                         var c =  pathArg[i];
                         if(Char.IsNumber(c))
                         { 
-                            int number = Char.GetNumericValue(c);
+                            int number = (int)Char.GetNumericValue(c);
                             while(i < pathArg.Length+1 && Char.IsNumber(pathArg[i+1]))
                             {
                                 i++;
-                                number = number * 10 + Char.GetNumericValue(pathArg[i]);
+                                number = number * 10 + (int)Char.GetNumericValue(pathArg[i]);
                             }
                             if(latest >= 0)
                             {
