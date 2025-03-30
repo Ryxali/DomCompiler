@@ -112,7 +112,7 @@ namespace DomCompiler
                 {
                     var line = reader.ReadLine();
 
-                    if (entryMatch.IsMatch(line))
+                    if (commandMatch.IsMatch(line))
                     {
                         var entry = ParseEntry(line, reader);
                         Get(entry.type).Add(entry);
@@ -250,7 +250,7 @@ namespace DomCompiler
                         var count = magicPathsArr[i];
                         if(count > 0)
                         {
-                            output.AppendLine(entryName);
+                            output.Append(entryName);
                             output.Append(' ');
                             output.Append(i);
                             output.Append(' ');
