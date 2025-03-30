@@ -181,7 +181,7 @@ namespace DomCompiler
                             while(i < pathArg.Length+1 && Char.IsNumber(pathArg[i+1]))
                             {
                                 i++;
-                                number = number * 10 + Char.GetNumericValue(pathArg[i]));
+                                number = number * 10 + Char.GetNumericValue(pathArg[i]);
                             }
                             if(latest >= 0)
                             {
