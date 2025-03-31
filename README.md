@@ -50,15 +50,23 @@ This remapping can be configured by passing a specific index as an argument when
 A few special commands are available that can only be interprited by the compiler. It will transform the input to the corresponding output for .dm files. These commands accept relative ids, and are as such useful for targeting enchantments and monsters added by the mod.
 
 In `#newspell` you can now type:
+
 `##globalenchantment <ench nbr>` shorthand for setting the `#effect 10081` and `#damage <ench nbr>`
+
 `##combatsummon <mnr>` shorthand for setting the `#effect 1` and `#damage <mnr>`
+
 `##ritualsummon <mnr>` shorthand for setting the `#effect 10001` and `#damage <mnr>`
+
 `##ritualsummoncom <mnr>` shorthand for setting the `#effect 10021` and `#damage <mnr>`
 
 For commands specifying `<path>` or `<path mask>` a shorthand is now supported: 
+
 `#magicskill F2G2` will give a mage 2 fire and 2 glamour magic.
+
 `#magicskill DDDD` you can use numbers or repeat letters to define the magic. This gives a mage death 4.
+
 `#custommagic FW 100` will give the mage 100% chance to get either fire or water magic.
+
 Shorthand letters for paths are as follows:
 
 - F = Fire
@@ -71,6 +79,7 @@ Shorthand letters for paths are as follows:
 - G = Glamour
 - B = Blood
 - H = Holy (Priest levels)
+
 Lowercase is also supported, left to your preference.
 
 ## Getting started
