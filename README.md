@@ -55,35 +55,29 @@ In `#newspell` you can now type:
 `##ritualsummon <mnr>` shorthand for setting the `#effect 10001` and `#damage <mnr>`
 `##ritualsummoncom <mnr>` shorthand for setting the `#effect 10021` and `#damage <mnr>`
 
+For commands specifying `<path>` or `<path mask>` a shorthand is now supported: 
+`#magicskill F2G2` will give a mage 2 fire and 2 glamour magic.
+`#magicskill DDDD` you can use numbers or repeat letters to define the magic. This gives a mage death 4.
+`#custommagic FW 100` will give the mage 100% chance to get either fire or water magic.
+Shorthand letters for paths are as follows:
+
+- F = Fire
+- A = Air
+- W = Water
+- E = Earth
+- N = Nature
+- D = Death
+- S = Astral
+- G = Glamour
+- B = Blood
+- H = Holy (Priest levels)
+Lowercase is also supported, left to your preference.
+
 ## Getting started
 This tool is executed from the command line, and is as such distributed bare-bones. Structuring the project and your developing environment is up to you. I've used Visual Studio Code for myself, which you can use as a base for your own mods. You can find this project [here](https://github.com/Ryxali/Dom-6-Dwarf-Faction).
 
 ## Limitations
-The ordering of mod command blocks are currently fixed, which may produced some unintended effects compared from standard Dominions modding. This can cause some unintended effects when copying spells, monsters, etc. Consider the below example found in example project:
-```
-#newspell -- Cheaper Terracotta Army
-#copyspell 1149
-#fatiguecost 700
-#restricted 151
-#end
-
-#selectspell 1149 -- Generic Terracotta Army
-#notfornation 151
-#end
-```
-Here the intent is to provide a cheaper "Terracotta Army" for the mod nation. When parsed in this order it works as intended. But if it looked like this in the output mod:
-```
-#selectspell 1149 -- Generic Terracotta Army
-#notfornation 151
-#end
-
-#newspell -- Cheaper Terracotta Army
-#copyspell 1149
-#fatiguecost 700
-#restricted 151
-#end
-```
-Then the #notfornation command would apply to the new spell we designed for our nation, rendering both disabled for it. To minimize issues, the compiler will always order #new entries before #select entries. If your mod heavily relies on the order of #new & #select entries, it may not generate the output you expect.
+When working with multiple files, the order they're output in the resulting mod file is difficult to control. If the order of specific commands are vital, put them in the same file.
 
 ## Contributing
 For bugs, feature improvements, or other spicy opinions feel free to raise an issue [here](https://github.com/Ryxali/DomCompiler/issues).
