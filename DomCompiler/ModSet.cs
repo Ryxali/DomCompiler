@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -8,10 +9,8 @@ namespace DomCompiler
 {
     public sealed class ModSet
     {
-        private readonly Dictionary<EntryType, List<Entry>> data = new Dictionary<EntryType, List<Entry>>();
+        private readonly List<Entry> data = new List<Entry>();
         private readonly HashSet<string> imagePaths = new HashSet<string>();
-
-        private readonly EntryComparer entryComparer = new EntryComparer();
 
         private readonly Regex entryMatch = new Regex(@"^#\w.+");
         private readonly Regex commandMatch = new Regex(@"#\S+");
@@ -32,7 +31,6 @@ namespace DomCompiler
         private readonly Regex codeMatch = new Regex(@"(?<=#\S*code\S*\s+)\$\d+");
         private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(magicboost)|(gems)|(mainpath)|(mainlevel)|(secondarypath)|(secondarylevel)|(magic))\s+)[a-zA-Z0-9]+");
         private readonly Regex customMagicMatch = new Regex(@"(#custommagic)\s+([a-zA-Z0-9]+)\s+([a-zA-Z0-9]+)");
-        //private readonly Regex magicMatch = new Regex(@"(?<=#((magicskill)|(custommagic))\s+)\$\d+");
 
         #region Special Commands
         private static readonly Regex globalEnchantment = new Regex(@"(?<=##globalenchantment\s+)\$?-?\d+");
@@ -56,33 +54,28 @@ namespace DomCompiler
 
         public ModSet(StartIndices startIndices)
         {
-            foreach (EntryType type in Enum.GetValues(typeof(EntryType)))
-            {
-                data.Add(type, new List<Entry>());
-            }
             this.startIndices = startIndices;
         }
 
-        public List<Entry> Get(EntryType type) => data[type];
+        public List<Entry> Get(EntryType type) => data;
 
         public void Sort()
         {
-            data[EntryType.Monster].Sort(entryComparer);
-            data[EntryType.Armor].Sort(entryComparer);
-            data[EntryType.Weapon].Sort(entryComparer);
-            data[EntryType.Nation].Sort(entryComparer);
-            data[EntryType.Mercenary].Sort(entryComparer);
-            data[EntryType.Spell].Sort(entryComparer);
-            data[EntryType.Poptype].Sort(entryComparer);
-            data[EntryType.Sound].Sort(entryComparer);
-            data[EntryType.Ai].Sort(entryComparer);
+            //data[EntryType.Monster].Sort(entryComparer);
+            //data[EntryType.Armor].Sort(entryComparer);
+            //data[EntryType.Weapon].Sort(entryComparer);
+            //data[EntryType.Nation].Sort(entryComparer);
+            //data[EntryType.Mercenary].Sort(entryComparer);
+            //data[EntryType.Spell].Sort(entryComparer);
+            //data[EntryType.Poptype].Sort(entryComparer);
+            //data[EntryType.Sound].Sort(entryComparer);
+            //data[EntryType.Ai].Sort(entryComparer);
         }
 
         public void BindIds()
         {
-            foreach (var a in data.Values)
-                foreach (var b in a)
-                    ResolveIds(b);
+            foreach (var a in data)
+                ResolveIds(a);
         }
 
         private void ResolveIds(Entry entry)
@@ -104,19 +97,22 @@ namespace DomCompiler
         }
 
 
-        public void Parse(string path)
+        public void Parse(string path, string workingDirectory)
         {
             using (var reader = new StreamReader(File.OpenRead(path)))
             {
+                var localPath = Path.GetRelativePath(workingDirectory, path);
                 var sb = new StringBuilder();
+                int index = 0;
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
 
                     if (commandMatch.IsMatch(line))
                     {
-                        var entry = ParseEntry(line, reader);
+                        var entry = ParseEntry(line, reader, localPath, index);
                         Get(entry.type).Add(entry);
+                        index++;
                     }
                 }
             }
@@ -179,7 +175,7 @@ namespace DomCompiler
                         if(Char.IsNumber(c))
                         { 
                             int number = (int)Char.GetNumericValue(c);
-                            while(i < pathArg.Length+1 && Char.IsNumber(pathArg[i+1]))
+                            while(i + 1 < pathArg.Length && Char.IsNumber(pathArg[i+1]))
                             {
                                 i++;
                                 number = number * 10 + (int)Char.GetNumericValue(pathArg[i]);
@@ -246,16 +242,20 @@ namespace DomCompiler
                             }
                         }
                     }
+                    bool w = false;
                     for(int i = 0; i < magicPathsArr.Length; i++)
                     {
                         var count = magicPathsArr[i];
                         if(count > 0)
                         {
+                            if (w)
+                                output.AppendLine();
                             output.Append(entryName);
                             output.Append(' ');
                             output.Append(i);
                             output.Append(' ');
                             output.Append(count);
+                            w = true;
                         }
                     }
                     return true;
@@ -334,14 +334,20 @@ namespace DomCompiler
 
         public void Write(StreamWriter stream)
         {
-            foreach (EntryType entryType in Enum.GetValues(typeof(EntryType)))
-            {
-                if (entryType != EntryType.Meta)
-                    stream.WriteLine($"-- {entryType}");
+            var toWrite = from d in data
+                          orderby d.fileIndex ascending
+                          group d by d.filePath into grp
+                          let first = grp.First()
+                          select grp.OrderBy(k => k.type).ThenBy(EntryComparer.IdScore);
 
-                var entries = Get(entryType);
+            foreach (var entries in toWrite)
+            {
+                var rootEntry = entries.First();
+                stream.WriteLine($"-- {entries.First().filePath}");
+
                 foreach (var entry in entries)
                 {
+                    var entryType = entry.type;
                     foreach (var line in entry.raw)
                     {
                         stream.WriteLine(line);
@@ -349,8 +355,7 @@ namespace DomCompiler
                     if (entryType != EntryType.General && entryType != EntryType.Meta)
                         stream.WriteLine();
                 }
-                if (entryType == EntryType.Meta)
-                    stream.WriteLine();
+                stream.WriteLine();
             }
         }
 
@@ -378,7 +383,7 @@ namespace DomCompiler
             }
         }
 
-        private Entry ParseEntry(string entry, StreamReader reader)
+        private Entry ParseEntry(string entry, StreamReader reader, string filePath, int fileIndex)
         {
             var raw = new List<string>();
             raw.Add(entry);
@@ -508,7 +513,9 @@ namespace DomCompiler
             {
                 type = type,
                 raw = raw.ToArray(),
-                id = id
+                id = id,
+                fileIndex = fileIndex,
+                filePath = filePath
             };
         }
     }

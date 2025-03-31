@@ -64,7 +64,7 @@ namespace DomCompiler
             foreach (var file in Directory.GetFiles(programArgs.workingDirectory, "*.dme", SearchOption.AllDirectories))
             {
                 Console.WriteLine($"Parse '{file}'");
-                modset.Parse(file);
+                modset.Parse(file, programArgs.workingDirectory);
             }
             modset.BindIds();
             modset.Sort();
